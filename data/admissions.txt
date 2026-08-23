@@ -1,0 +1,47 @@
+# DHARMSINH DESAI UNIVERSITY (DDU) - ADMISSIONS & ELIGIBILITY GUIDELINES
+
+## 1. Overview of Academic Offerings
+Dharmsinh Desai University (DDU), located at College Road, Nadiad, Gujarat, offers degrees through multiple faculties:
+- **Faculty of Technology (FoT)**:
+  - B.Tech (Grant-in-Aid & Self-Financed): Information Technology (IT), Computer Engineering (CE), Electronics & Communication (EC), Chemical Engineering (CH), Instrumentation & Control (IC), Mechanical Engineering (MH), Civil Engineering (CL).
+  - M.Tech: Information Technology, Computer Engineering, Electronics & Communication, Chemical Engineering, Civil Engineering.
+- **Faculty of Computer Applications (FoCA)**: BCA, MCA (2-Year Master of Computer Applications).
+- **Faculty of Management Studies (FoMS)**: BBA, MBA (Full-Time 2-Year Program).
+- **Faculty of Pharmacy**: B.Pharm, M.Pharm (Pharmaceutics, Quality Assurance, Pharmacology), Ph.D.
+- **Faculty of Dental Science**: BDS (Bachelor of Dental Surgery), MDS (Master of Dental Surgery).
+
+## 2. B.Tech Admission Process & Quotas
+- **ACPC Quota (State Level Merit - 85% to 100% Seats)**:
+  - Admissions to undergraduate engineering programs are primarily conducted through the **Admission Committee for Professional Courses (ACPC), Gujarat** (website: gujacpc.admissions.nic.in).
+  - Eligibility: Passed 10+2 (HSC) Examination from Gujarat Board (GSEB) or CBSE/ICSE with Physics and Mathematics as mandatory subjects along with Chemistry/Biotechnology/Biology/Technical Vocational subject.
+  - Merit Calculation: 50% weightage of Gujarat Secondary and Higher Secondary Education Board (GSEB/CBSE) Theory Marks in PCM + 50% weightage of GUJCET / JEE Main percentile.
+- **Management / NRI / NRI Sponsored Quota (15% Seats in Self-Financed Programs)**:
+  - Admission based on direct application to DDU through the institutional portal.
+  - Merit is prepared based on JEE Main / GUJCET scores and 12th PCM aggregate.
+
+## 3. Approximate ACPC Cutoff Ranks (General Category Trends)
+- **Computer Engineering (CE - Grant-in-Aid / SFI)**: ACPC Merit Rank 200 - 1200
+- **Information Technology (IT - SFI)**: ACPC Merit Rank 400 - 1800
+- **Electronics & Communication (EC)**: ACPC Merit Rank 2500 - 6500
+- **Chemical Engineering (CH - Renowned Legacy Program)**: ACPC Merit Rank 1500 - 5500
+- **Instrumentation & Control (IC)**: ACPC Merit Rank 7000 - 14000
+- **Civil & Mechanical Engineering**: ACPC Merit Rank 8000 - 18000
+*(Note: Actual cutoffs vary each academic year based on ACPC counseling rounds and candidate preferences).*
+
+## 4. Postgraduate & Professional Program Eligibility
+- **MCA (Master of Computer Applications - 2 Years)**:
+  - Passed BCA / B.Sc (Computer Science/IT) / B.E. / B.Tech or equivalent degree with Mathematics at 10+2 level or at Graduate level. Minimum 50% marks (45% for reserved category).
+  - Admission through ACPC Gujarat based on CMAT (Common Management Admission Test) score.
+- **MBA (Master of Business Administration - 2 Years)**:
+  - Any graduate with minimum 50% marks (45% for reserved category) and valid CMAT score conducted by NTA / ACPC.
+- **B.Pharm**: 10+2 with PCB/PCM through ACPC + GUJCET.
+- **BDS (Dental)**: Admission strictly through Gujarat State NEET-UG counseling committee.
+
+## 5. Required Documents for Admission Reporting
+1. ACPC Admission Allotment Letter & Fee Receipt.
+2. 10th (SSC) and 12th (HSC) Mark Sheets & Passing Certificates.
+3. GUJCET / JEE Main / CMAT / NEET Scorecard (as applicable).
+4. School Leaving Certificate / Transfer Certificate (TC).
+5. Caste Certificate (SC/ST/SEBC) and Non-Creamy Layer (NCL) Certificate for current financial year (if applicable).
+6. Income Certificate / EWS Certificate (if applicable for tuition waiver or scholarship).
+7. Passport size photographs (4 copies) and Aadhaar Card copy.

@@ -1,0 +1,45 @@
+# DHARMSINH DESAI UNIVERSITY (DDU) - ACADEMIC DEPARTMENTS & FACULTIES
+
+## 1. Faculty of Technology (FoT)
+DDU's Faculty of Technology is recognized as one of the premier technical education powerhouses in western India, holding NBA accreditations and autonomous status since 1991 (elevated to Deemed University in 2000 and State University in 2005).
+
+### A. Department of Information Technology (IT)
+- Established in 1999 to cater to the booming software industry.
+- Laboratories: High-Performance Cloud Computing Lab, AI/Machine Learning Research Lab, Cyber Security & IoT Center, Mobile App Development Lab, Distributed Systems Lab.
+- Core Domains: Full-stack Development, Artificial Intelligence, Data Engineering, Cloud DevOps, Deep Learning, Blockchain.
+- Placements: Consistently 90%+ placement conversion with recruiters like Amazon, Morgan Stanley, Crest Data Systems, Sophos, LTI, TCS.
+
+### B. Department of Computer Engineering (CE)
+- One of the oldest and most prestigious computer engineering departments in Gujarat.
+- Strong focus on algorithms, computer architecture, systems programming, compiler design, computer vision, and NLP.
+- Active student chapters: ACM Student Chapter, CSI (Computer Society of India), IEEE Student Branch.
+
+### C. Department of Chemical Engineering (CH)
+- Established in 1968, the founding department of Dharmsinh Desai Institute of Technology (DDIT).
+- Known across India for producing industry leaders in petroleum refining, specialty chemicals, polymers, and fertilizer industries.
+- World-class pilot plants, environmental engineering labs, mass transfer and chemical reaction engineering simulation suites.
+
+### D. Department of Electronics & Communication Engineering (EC)
+- Focus on VLSI design, Embedded Systems, 5G Wireless Communications, Digital Signal Processing (DSP), and Robotics.
+- Labs equipped with Cadence VLSI tools, Xilinx FPGA kits, Texas Instruments Embedded development setups, Vector Network Analyzers.
+
+### E. Department of Instrumentation & Control (IC)
+- Specialization in Industrial Automation, SCADA, PLC programming, Distributed Control Systems (DCS), and Process Instrumentation.
+
+### F. Department of Mechanical (MH) & Civil Engineering (CL)
+- Advanced CAD/CAM/CAE Labs, CNC machining centers, Fluid Mechanics & Thermal Labs, Structural Testing and Geotechnical engineering labs.
+
+## 2. Faculty of Computer Applications (FoCA)
+- Offers Master of Computer Applications (MCA - 2-Year Program) and Bachelor of Computer Applications (BCA).
+- Curriculum emphasizes modern cloud frameworks, full-stack JavaScript/Python, database administration, UI/UX, and enterprise software engineering.
+
+## 3. Faculty of Management Studies (FoMS)
+- Offers MBA and BBA programs specializing in Marketing, Finance, Human Resource Management, and Business Analytics.
+
+## 4. Faculty of Pharmacy
+- Recognized by the Pharmacy Council of India (PCI) and AICTE.
+- Offers B.Pharm, M.Pharm, and Ph.D. with state-of-the-art animal house facilities, pharmaceutical chemistry research labs, and analytical testing centers.
+
+## 5. Faculty of Dental Science & Hospital
+- Offers BDS and MDS recognized by the Dental Council of India (DCI).
+- Operates a 100+ chair modern dental hospital providing affordable oral healthcare to the community and intensive clinical training.

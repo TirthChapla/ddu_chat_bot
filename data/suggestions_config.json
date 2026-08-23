@@ -1,0 +1,249 @@
+{
+  "welcome_message": "Hello 👋 I am the DDU AI Assistant.\nI can help you with admissions, attendance rules, placements, fees, examinations, scholarships, hostels, and circulars for Dharmsinh Desai University (Nadiad).\nHow can I help you today?",
+  "primary_categories": [
+    {
+      "id": "admissions",
+      "name": "Admissions & Cutoffs",
+      "icon": "🎓",
+      "description": "Eligibility, ACPC process, branches & merit cutoffs"
+    },
+    {
+      "id": "attendance",
+      "name": "Attendance Rules",
+      "icon": "📅",
+      "description": "75% minimum rule, condonation & debarment criteria"
+    },
+    {
+      "id": "placements",
+      "name": "Placements & Internships",
+      "icon": "💼",
+      "description": "Recruiters, packages, eligibility & T&P cell policies"
+    },
+    {
+      "id": "examinations",
+      "name": "Examinations & Grading",
+      "icon": "📝",
+      "description": "SPI/CPI calculation, backlog rules & re-checking"
+    },
+    {
+      "id": "fees_scholarships",
+      "name": "Fees & Scholarships",
+      "icon": "💰",
+      "description": "Semester fee structure, MYSY & Freeship card"
+    },
+    {
+      "id": "departments",
+      "name": "Departments & Courses",
+      "icon": "📚",
+      "description": "B.Tech (IT/CE/EC/CH/IC/MH/CL), MCA, MBA, Pharmacy, Dental"
+    },
+    {
+      "id": "hostel",
+      "name": "Hostels & Campus Life",
+      "icon": "🏠",
+      "description": "Hostel allotment, mess facilities & campus amenities"
+    },
+    {
+      "id": "circulars_faqs",
+      "name": "Circulars & FAQs",
+      "icon": "📢",
+      "description": "Latest academic calendar, notices & general guidelines"
+    }
+  ],
+  "sub_topics": {
+    "admissions": [
+      {
+        "label": "B.Tech Admission Eligibility & ACPC Process",
+        "query": "What is the admission process and eligibility criteria for B.Tech at DDU through ACPC?"
+      },
+      {
+        "label": "ACPC Merit Cutoffs for IT and Computer Engineering",
+        "query": "What are the previous year ACPC cutoff ranks for Information Technology (IT) and Computer Engineering (CE) at DDU?"
+      },
+      {
+        "label": "Management / NRI Quota Admissions",
+        "query": "Does DDU offer management quota or NRI quota seats for engineering admissions, and how to apply?"
+      },
+      {
+        "label": "Postgraduate Admissions (MCA, MBA, M.Tech)",
+        "query": "What is the eligibility criteria and entrance exam requirement for MCA, MBA, and M.Tech programs at DDU?"
+      },
+      {
+        "label": "Required Documents for Admission",
+        "query": "What documents are required during DDU reporting and admission verification?"
+      }
+    ],
+    "attendance": [
+      {
+        "label": "Minimum 75% Attendance Requirement",
+        "query": "What is the minimum attendance requirement at DDU to appear in semester end examinations?"
+      },
+      {
+        "label": "Medical Leave & Condonation Policy",
+        "query": "What is the condonation rule and medical certificate submission process for attendance shortage at DDU?"
+      },
+      {
+        "label": "Attendance Shortage Consequences & Debarment",
+        "query": "What happens if a student has less than 75% attendance in theory or practicals at DDU?"
+      },
+      {
+        "label": "How Attendance is Calculated & Monitored",
+        "query": "How is student attendance recorded, calculated, and communicated to parents at DDU?"
+      }
+    ],
+    "placements": [
+      {
+        "label": "Top Recruiting Companies at DDU",
+        "query": "Which top companies visit DDU Nadiad for campus placements in IT, Computer, EC, and Chemical engineering?"
+      },
+      {
+        "label": "Placement Statistics & Highest/Average Packages",
+        "query": "What are the latest placement statistics, highest package, and average package for DDU engineering graduates?"
+      },
+      {
+        "label": "Placement Eligibility & Backlog Criteria",
+        "query": "What is the placement eligibility criteria and backlog policy for campus placement drives at DDU?"
+      },
+      {
+        "label": "Training & Placement (T&P) Cell Guidelines",
+        "query": "What are the rules, registration process, and guidelines set by the DDU Training and Placement Cell?"
+      },
+      {
+        "label": "Final Semester Internship Policy",
+        "query": "What is DDU's policy regarding 8th-semester industry internships and project work?"
+      }
+    ],
+    "examinations": [
+      {
+        "label": "SPI and CPI Calculation Formula",
+        "query": "How are SPI (Semester Performance Index) and CPI (Cumulative Performance Index) calculated at DDU?"
+      },
+      {
+        "label": "Backlog & Remedial Exam Rules",
+        "query": "What are the rules for clearing backlogs and appearing in remedial/supplementary examinations at DDU?"
+      },
+      {
+        "label": "Paper Re-checking & Re-assessment Process",
+        "query": "How can students apply for answer sheet re-checking or re-assessment after semester exam results?"
+      },
+      {
+        "label": "Passing Marks & Grade Point Scale",
+        "query": "What are the minimum passing marks in internal and external exams, and what is the 10-point grading scale at DDU?"
+      }
+    ],
+    "fees_scholarships": [
+      {
+        "label": "B.Tech & Degree Program Fee Structure",
+        "query": "What is the annual/semester tuition fee structure for B.Tech, MCA, Pharmacy, and other courses at DDU?"
+      },
+      {
+        "label": "MYSY (Mukhyamantri Yuva Swavalamban Yojana) Scholarship",
+        "query": "How can eligible DDU students apply for the MYSY Gujarat scholarship and what are the benefits?"
+      },
+      {
+        "label": "Freeship Card & Government Schemes (SC/ST/SEBC)",
+        "query": "What is the process for submitting Freeship Card, Digital Gujarat scholarships, and SEBC financial assistance at DDU?"
+      },
+      {
+        "label": "DDU Merit-based Financial Aid",
+        "query": "Does Dharmsinh Desai University offer institutional merit scholarships or fee waivers for top rankers?"
+      }
+    ],
+    "departments": [
+      {
+        "label": "Information Technology (IT) Department Overview",
+        "query": "Tell me about the Department of Information Technology at DDU, faculty expertise, labs, and research focus."
+      },
+      {
+        "label": "Computer Engineering (CE) Department",
+        "query": "What are the curriculum highlights, labs, and faculty qualifications of the Computer Engineering department at DDU?"
+      },
+      {
+        "label": "Chemical & IC Engineering Departments",
+        "query": "What is the history, industry collaborations, and laboratories of Chemical Engineering and Instrumentation & Control at DDU?"
+      },
+      {
+        "label": "Faculty of Pharmacy & Dental Sciences",
+        "query": "What courses, approvals (PCI/DCI), and hospital facilities are available under Pharmacy and Dental Sciences at DDU?"
+      }
+    ],
+    "hostel": [
+      {
+        "label": "Boys and Girls Hostel Admission & Fees",
+        "query": "What are the hostel admission rules, room types, and annual hostel fees for boys and girls at DDU Nadiad?"
+      },
+      {
+        "label": "Mess & Dining Facilities",
+        "query": "What dining, meal plans, and hygiene standards are provided in the DDU hostel mess?"
+      },
+      {
+        "label": "Hostel Timings, Discipline & Wi-Fi Facilities",
+        "query": "What are the hostel curfew timings, security regulations, Wi-Fi access, and visitor policies at DDU?"
+      }
+    ],
+    "circulars_faqs": [
+      {
+        "label": "Academic Calendar & Semester Dates",
+        "query": "What is the academic calendar schedule, term start dates, exam schedules, and vacation dates at DDU?"
+      },
+      {
+        "label": "Bonafide Certificate & Transcript Application",
+        "query": "How can a student apply for a Bonafide Certificate, Migration Certificate, or official transcripts at DDU?"
+      },
+      {
+        "label": "University Contact Details & Helpdesk",
+        "query": "What are the official contact numbers, email addresses, and campus location of Dharmsinh Desai University (DDU) Nadiad?"
+      }
+    ]
+  },
+  "follow_up_map": {
+    "attendance": [
+      "Medical Leave Condonation Rules",
+      "Consequences of <75% Attendance",
+      "How to Check Attendance Record",
+      "Examination Eligibility Guidelines"
+    ],
+    "placements": [
+      "Eligibility Criteria for Placements",
+      "Top Recruiting Companies",
+      "Highest and Average Packages",
+      "Internship Policy for 8th Sem"
+    ],
+    "admissions": [
+      "ACPC Cutoff Ranks",
+      "Fee Structure for B.Tech",
+      "MYSY Scholarship Eligibility",
+      "Required Admission Documents"
+    ],
+    "examinations": [
+      "Backlog Exam Rules",
+      "SPI and CPI Calculation",
+      "Re-assessment Application Procedure",
+      "Grading System & Grade Points"
+    ],
+    "fees_scholarships": [
+      "MYSY Scholarship Details",
+      "Semester Fee Payment Deadlines",
+      "Freeship Card Process",
+      "Tuition Fee Breakdown by Branch"
+    ],
+    "hostel": [
+      "Hostel Fee Structure",
+      "Mess & Meal Timings",
+      "Hostel Rules & Curfew",
+      "Campus Wi-Fi & Facilities"
+    ],
+    "departments": [
+      "Placement Records of this Department",
+      "Faculty & Laboratory Details",
+      "Courses Offered",
+      "Eligibility & Cutoffs"
+    ],
+    "general": [
+      "Academic Calendar Schedule",
+      "How to Apply for Bonafide Certificate",
+      "Official University Contacts",
+      "Student Handbook Guidelines"
+    ]
+  }
+}

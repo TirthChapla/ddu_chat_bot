@@ -1,0 +1,45 @@
+# DHARMSINH DESAI UNIVERSITY (DDU) - EXAMINATION REGULATIONS & EVALUATION SCHEME
+
+## 1. Grading System & 10-Point Scale
+DDU evaluates academic performance based on a 10-point letter grading system:
+- **Grade 'AA' (Grade Point 10)**: Outstanding (Marks >= 85%)
+- **Grade 'AB' (Grade Point 9)**: Excellent (Marks 75% to 84%)
+- **Grade 'BB' (Grade Point 8)**: Very Good (Marks 65% to 74%)
+- **Grade 'BC' (Grade Point 7)**: Good (Marks 55% to 64%)
+- **Grade 'CC' (Grade Point 6)**: Fair / Average (Marks 45% to 54%)
+- **Grade 'CD' (Grade Point 5)**: Marginal (Marks 40% to 44%)
+- **Grade 'DD' (Grade Point 4)**: Pass (Marks 35% to 39% in specific subjects or conditional pass)
+- **Grade 'FF' (Grade Point 0)**: Fail / Backlog (Marks < 35% or < 40% in external exam)
+- **Grade 'II'**: Incomplete evaluation due to authorized absence.
+- **Grade 'XX' / 'NA'**: Debarred due to attendance shortage (< 75%).
+
+## 2. SPI and CPI Calculation Formula
+- **SPI (Semester Performance Index)**:
+  - Measures performance in a single semester.
+  - Formula: `SPI = Σ (Course Credits × Grade Points Earned) / Σ (Course Credits in that Semester)`
+- **CPI (Cumulative Performance Index)**:
+  - Measures cumulative performance across all completed semesters.
+  - Formula: `CPI = Σ (All Course Credits × Grade Points Earned across all Semesters) / Σ (Total Credits registered across all Semesters)`
+- **Equivalent Percentage Formula**:
+  - `Equivalent Percentage (%) = (CPI - 0.5) × 10` (or as formally certified in the university marksheet equivalence transcript).
+
+## 3. Examination Structure & Passing Standards
+- **Evaluation Weightage**:
+  - Continuous Internal Evaluation (CIE / Sessional Exams): 30% to 40% (comprising 2 sessional tests, quizzes, assignments, attendance).
+  - Practical / Lab Continuous Evaluation & Viva: 20% to 30%.
+  - Semester End University External Examination (SEE): 50% to 60%.
+- **Passing Minimum**:
+  - A student must secure a minimum of **40% marks** separately in the External Semester End Examination and an aggregate of **40% marks** (Internal + External combined) in each theory/practical head to be awarded a passing grade.
+
+## 4. Backlog, ATKT, and Remedial Examinations
+- **ATKT (Allowed to Keep Term)**:
+  - Students with backlogs ('FF' grade) in a few subjects are allowed to proceed to the next higher semester provided they do not exceed the permissible maximum backlog limits specified by the Academic Council.
+- **Remedial (Supplementary) Exams**:
+  - Remedial examinations for odd semesters are conducted alongside regular odd semester exams, and even semester remedial exams with even semester regular exams (or special remedial sessions in summer).
+  - Fees: Prescribed examination form fee per subject (payable via DDU student online portal).
+
+## 5. Paper Re-checking & Re-assessment Procedure
+- Students dissatisfied with their evaluation can apply for **Re-checking / Verification of Marks** or **Re-assessment (Re-evaluation)** within **10 working days** from the declaration of online semester results.
+- **Re-checking**: Verifies totality of marks and ensures no question was left unmarked.
+- **Re-assessment**: The answer script is masked and re-evaluated by an independent external evaluator. If the difference in marks exceeds 10% of total marks, the revised score is awarded.
+- Applications must be submitted through the DDU Exam Portal with payment of the prescribed verification fee.
