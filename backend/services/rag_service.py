@@ -7,18 +7,21 @@ and Source Citation extraction for Dharmsinh Desai University (DDU).
 import time
 import datetime
 import logging
+from typing import TYPE_CHECKING
 from typing import Dict, Any, List, Optional
 
 from langchain_core.prompts import PromptTemplate
 
 from ..config import settings
 from ..models.schemas import ChatRequest, ChatResponse, SourceCitation, QueryLog
-from embeddings.indexer import ChromaIndexer
 from .classifier_service import QueryClassifierService
 from .suggestion_service import SuggestionService
-from .llm_factory import get_llm
+from .llm_factory import GeminiRequestError, get_llm
 
 logger = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from embeddings.indexer import ChromaIndexer
 
 STRICT_RAG_PROMPT_TEMPLATE = """You are the intelligent DDU AI Assistant for Dharmsinh Desai University (Nadiad, Gujarat).
 Your objective is to provide direct, precise, clear, and highly useful answers to students, faculty, and applicants based on the verified university records provided below.
@@ -30,7 +33,8 @@ Guidelines for Maximum Efficiency & Quality:
    - Use concise bullet points or numbered steps for multi-part rules or procedures.
    - Use tables when comparing branches, fees, packages, or grading scales.
 3. Be comprehensive yet concise: cover all aspects asked by the user while eliminating repetitive fluff.
-4. If specific information is not in the records, state what is known and provide the relevant DDU office contact.
+4. If the provided context does not contain the answer, do not hallucinate. Instead, politely reply that you do not have the information in your current records and suggest they contact the relevant DDU office or check the official website.
+5. NEVER mention the source file name, page number, or category in your response.
 
 Context:
 {context}
@@ -43,12 +47,13 @@ Direct, Accurate & Structured Answer:"""
 class RAGService:
     def __init__(
         self,
-        indexer: ChromaIndexer,
+        indexer: "ChromaIndexer",
         suggestion_service: SuggestionService,
     ):
         self.indexer = indexer
         self.suggestion_service = suggestion_service
-        self.llm = get_llm()
+        # The provider may download/configure a client and may require an API key.
+        # Create it only when a chat request actually needs generation.
         self.prompt = PromptTemplate(
             template=STRICT_RAG_PROMPT_TEMPLATE,
             input_variables=["context", "question"],
@@ -56,8 +61,19 @@ class RAGService:
         self.query_logs: List[Dict[str, Any]] = []
 
     def answer_query(self, request: ChatRequest) -> ChatResponse:
+        request_started = time.perf_counter()
+        logger.info("CHAT REQUEST START query_length=%d", len(request.query or ""))
+        try:
+            return self._answer_query(request)
+        finally:
+            logger.info(
+                "CHAT REQUEST END duration=%.2fs",
+                time.perf_counter() - request_started,
+            )
+
+    def _answer_query(self, request: ChatRequest) -> ChatResponse:
         """Processes a chat request through the full RAG pipeline."""
-        start_time = time.time()
+        start_time = time.perf_counter()
         query = request.query.strip()
 
         # 1. Query Intent & Category Classification
@@ -89,7 +105,7 @@ class RAGService:
             cat = doc.metadata.get("category", category)
 
             context_parts.append(
-                f"[Source: {source_name}, Page: {page_num}, Category: {cat}]\n{doc.page_content}"
+                f"{doc.page_content}"
             )
 
             # Similarity score normalized (Chroma returns distance, lower is closer)
@@ -109,10 +125,24 @@ class RAGService:
         context_str = "\n\n---\n\n".join(context_parts) if context_parts else "No relevant information found in knowledge base."
 
         # 4. LLM Generation
+        llm_started = time.perf_counter()
+        logger.info(
+            "GEMINI CALL PREPARE category=%s sources=%d prompt_chars=%d",
+            category,
+            len(citations),
+            len(context_str) + len(query),
+        )
         try:
             active_llm = get_llm()
             formatted_prompt = self.prompt.format(context=context_str, question=query)
+            logger.info("GEMINI CALL START model client ready; invoking generate_content")
             llm_response = active_llm.invoke(formatted_prompt)
+            logger.info(
+                "GEMINI CALL END duration=%.2fs response_type=%s",
+                time.perf_counter() - llm_started,
+                type(llm_response).__name__,
+            )
+
             # Support both string and structured content blocks
             if hasattr(llm_response, "content"):
                 if isinstance(llm_response.content, list):
@@ -122,18 +152,21 @@ class RAGService:
                     answer_text = str(llm_response.content)
             else:
                 answer_text = str(llm_response)
-        except Exception as e:
-            logger.error(f"Error during LLM invocation: {e}")
-            answer_text = (
-                f"Based on DDU records:\n\n{context_parts[0] if context_parts else 'No records available.'}\n\n"
-                f"*Note: For official verification, please contact the DDU office.*"
+        except Exception as exc:
+            logger.exception(
+                "GEMINI CALL FAILED after %.2fs",
+                time.perf_counter() - llm_started,
             )
+            raise GeminiRequestError(
+                "Gemini did not return a response. Check the API key, model name, quota, "
+                "network connectivity, and timeout logs."
+            ) from exc
 
         # 5. Dynamic Follow-Up Suggestions
         follow_ups = self.suggestion_service.get_dynamic_follow_ups(category=category, query=query)
 
         # 6. Metrics & Logging
-        latency = round((time.time() - start_time) * 1000, 2)
+        latency = round((time.perf_counter() - start_time) * 1000, 2)
         confidence_level = "High" if citations and citations[0].similarity_score > 0.6 else "Medium"
 
         self.query_logs.append({

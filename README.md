@@ -1,4 +1,4 @@
-# 🎓 DDU AI Assistant — End-to-End University RAG System
+///////////////////////////////////////////////////////# 🎓 DDU AI Assistant — End-to-End University RAG System
 
 A production-grade, resume-ready **Retrieval-Augmented Generation (RAG)** chatbot built specifically for **Dharmsinh Desai University (DDU), Nadiad**.
 
@@ -190,7 +190,7 @@ cd ..
 
 #### Option A: Run FastAPI Server (Full Stack React + Backend)
 ```bash
-.venv\Scripts\python -m backend.main
+.venv\Scripts\python -m uvicorn backend.main:app --reload
 ```
 Open **http://127.0.0.1:8000** in your browser.
 

@@ -6,18 +6,20 @@ Handles document uploading, deletion, and vector store synchronization.
 import os
 import shutil
 import logging
-from typing import Dict, Any, List
+from typing import TYPE_CHECKING, Dict, Any, List
 from fastapi import UploadFile
 
 from ..config import settings
-from embeddings.indexer import ChromaIndexer
 from scraper.ddu_scraper import DDUScraper
+
+if TYPE_CHECKING:
+    from embeddings.indexer import ChromaIndexer
 
 logger = logging.getLogger(__name__)
 
 
 class DocumentService:
-    def __init__(self, indexer: ChromaIndexer):
+    def __init__(self, indexer: "ChromaIndexer"):
         self.indexer = indexer
         self.uploads_dir = settings.UPLOADS_DIR
         os.makedirs(self.uploads_dir, exist_ok=True)

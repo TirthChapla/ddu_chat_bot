@@ -4,55 +4,128 @@ FastAPI Backend Application Entrypoint for DDU AI Assistant
 
 import os
 import logging
+import importlib
+import time
 from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING, Any, Callable, TypeVar
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .config import settings
-from embeddings.indexer import ChromaIndexer
-from .services.suggestion_service import SuggestionService
-from .services.document_service import DocumentService
-from .services.rag_service import RAGService
 from .routes import chat_router, suggestions_router, admin_router, analytics_router
+
+if TYPE_CHECKING:
+    from embeddings.indexer import ChromaIndexer
+    from .services.suggestion_service import SuggestionService
+    from .services.document_service import DocumentService
+    from .services.rag_service import RAGService
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("ddu_assistant")
+T = TypeVar("T")
+
+
+def _timed_step(label: str, operation: Callable[[], T]) -> T:
+    """Run one startup operation with a clear boundary and duration."""
+    started = time.perf_counter()
+    logger.info("START %s", label)
+    try:
+        result = operation()
+    except Exception:
+        logger.exception("FAILED %s after %.2fs", label, time.perf_counter() - started)
+        raise
+    logger.info("DONE %s in %.2fs", label, time.perf_counter() - started)
+    return result
 
 # Shared Singletons
-indexer: ChromaIndexer = None
-suggestion_service: SuggestionService = None
-document_service: DocumentService = None
-rag_service: RAGService = None
+indexer: Any = None
+suggestion_service: Any = None
+document_service: Any = None
+rag_service: Any = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initializes services and validates vector store index on startup."""
     global indexer, suggestion_service, document_service, rag_service
-    logger.info("Starting DDU AI Assistant Backend...")
-
-    indexer = ChromaIndexer(
-        persist_dir=settings.CHROMA_PERSIST_DIR,
-        collection_name=settings.COLLECTION_NAME,
-        data_dir=settings.DATA_DIR,
-        uploads_dir=settings.UPLOADS_DIR,
+    started = time.perf_counter()
+    logger.info("Starting DDU AI Assistant Backend startup")
+    logger.info(
+        "Configuration: host=%s port=%s embedding_provider=%s embedding_model=%s "
+        "llm_provider=%s gemini_model=%s gemini_key_present=%s gemini_key_prefix=%s "
+        "gemini_timeout=%ss chroma_dir=%s",
+        settings.HOST,
+        settings.PORT,
+        settings.EMBEDDING_PROVIDER,
+        settings.EMBEDDING_MODEL,
+        settings.LLM_PROVIDER,
+        settings.GEMINI_MODEL,
+        bool(settings.GEMINI_API_KEY.strip()),
+        settings.GEMINI_API_KEY.strip()[:10] if settings.GEMINI_API_KEY.strip() else "<missing>",
+        settings.GEMINI_TIMEOUT_SECONDS,
+        settings.CHROMA_PERSIST_DIR,
     )
-    suggestion_service = SuggestionService(config_path=settings.SUGGESTIONS_CONFIG_PATH)
-    document_service = DocumentService(indexer=indexer)
-    rag_service = RAGService(indexer=indexer, suggestion_service=suggestion_service)
 
-    # Check if index needs building
-    stats = indexer.get_stats()
-    if stats["total_chunks"] == 0:
-        logger.info("ChromaDB index is empty. Auto-indexing initial seed documents...")
-        indexer.rebuild_index()
-        logger.info("Initial index build completed.")
-    else:
-        logger.info(f"Loaded existing ChromaDB vector index ({stats['total_chunks']} chunks across {stats['total_documents']} documents).")
+    try:
+        indexer_class = _timed_step(
+            "import embeddings.indexer (may load LangChain/Chroma dependencies)",
+            lambda: importlib.import_module("embeddings.indexer").ChromaIndexer,
+        )
+        suggestion_class = _timed_step(
+            "import backend.services.suggestion_service",
+            lambda: importlib.import_module("backend.services.suggestion_service").SuggestionService,
+        )
+        document_class = _timed_step(
+            "import backend.services.document_service",
+            lambda: importlib.import_module("backend.services.document_service").DocumentService,
+        )
+        rag_class = _timed_step(
+            "import backend.services.rag_service",
+            lambda: importlib.import_module("backend.services.rag_service").RAGService,
+        )
+
+        indexer = _timed_step(
+            "construct ChromaIndexer (embedding model and vector store)",
+            lambda: indexer_class(
+                persist_dir=settings.CHROMA_PERSIST_DIR,
+                collection_name=settings.COLLECTION_NAME,
+                data_dir=settings.DATA_DIR,
+                uploads_dir=settings.UPLOADS_DIR,
+            ),
+        )
+        suggestion_service = _timed_step(
+            "construct SuggestionService",
+            lambda: suggestion_class(config_path=settings.SUGGESTIONS_CONFIG_PATH),
+        )
+        document_service = _timed_step(
+            "construct DocumentService",
+            lambda: document_class(indexer=indexer),
+        )
+        rag_service = _timed_step(
+            "construct RAGService (LLM remains lazy until a chat request)",
+            lambda: rag_class(indexer=indexer, suggestion_service=suggestion_service),
+        )
+
+        stats = _timed_step("read ChromaDB index statistics", indexer.get_stats)
+        if stats["total_chunks"] == 0:
+            logger.info("ChromaDB index is empty; starting seed document indexing")
+            stats = _timed_step("rebuild ChromaDB seed index", indexer.rebuild_index)
+        logger.info(
+            "ChromaDB ready: %s chunks across %s documents",
+            stats["total_chunks"],
+            stats["total_documents"],
+        )
+    except Exception as exc:
+        logger.exception("Backend startup failed after %.2fs", time.perf_counter() - started)
+        raise RuntimeError(
+            "DDU backend startup failed. See the preceding timed startup step for the exact failing operation."
+        ) from exc
+
+    logger.info("Backend startup complete in %.2fs; accepting requests", time.perf_counter() - started)
 
     yield
     logger.info("Shutting down DDU AI Assistant Backend...")
@@ -110,6 +183,7 @@ else:
 
 if __name__ == "__main__":
     import uvicorn
+    logger.info("Launching Uvicorn on %s:%s", settings.HOST, settings.PORT)
     uvicorn.run(
         "backend.main:app",
         host=settings.HOST,

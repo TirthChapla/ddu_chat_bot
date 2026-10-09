@@ -7,6 +7,7 @@ Supports document indexing, incremental upload insertion, deletion, and similari
 import os
 import glob
 import logging
+import time
 from typing import List, Dict, Any, Optional, Tuple
 
 import chromadb
@@ -22,29 +23,34 @@ logger = logging.getLogger(__name__)
 
 def get_embedding_function():
     """Initializes the embedding model based on environment configuration."""
+    started = time.perf_counter()
     provider = os.getenv("EMBEDDING_PROVIDER", "local").lower()
     gemini_key = os.getenv("GEMINI_API_KEY", "")
 
     if provider == "gemini" and gemini_key:
         try:
             from langchain_google_genai import GoogleGenerativeAIEmbeddings
-            logger.info("Using Google Generative AI Embeddings")
-            return GoogleGenerativeAIEmbeddings(
+            logger.info("Loading Google Generative AI Embeddings")
+            embeddings = GoogleGenerativeAIEmbeddings(
                 model="models/embedding-001",
                 google_api_key=gemini_key
             )
+            logger.info("Google embeddings ready in %.2fs", time.perf_counter() - started)
+            return embeddings
         except Exception as e:
             logger.warning(f"Failed to load Google Embeddings, falling back to local: {e}")
 
     try:
         from langchain_huggingface import HuggingFaceEmbeddings
         model_name = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
-        logger.info(f"Using HuggingFace Embeddings: {model_name}")
-        return HuggingFaceEmbeddings(
+        logger.info("Loading HuggingFace Embeddings: %s (model download/load may block)", model_name)
+        embeddings = HuggingFaceEmbeddings(
             model_name=model_name,
             model_kwargs={"device": "cpu"},
             encode_kwargs={"normalize_embeddings": True},
         )
+        logger.info("HuggingFace embeddings ready in %.2fs", time.perf_counter() - started)
+        return embeddings
     except Exception as e:
         logger.error(f"Error initializing HuggingFace embeddings: {e}")
         # Return fallback embedding if needed
@@ -68,22 +74,28 @@ class ChromaIndexer:
         os.makedirs(self.persist_dir, exist_ok=True)
         os.makedirs(self.uploads_dir, exist_ok=True)
 
+        logger.info("ChromaIndexer: creating embedding function")
         self.embeddings = get_embedding_function()
+        logger.info("ChromaIndexer: creating document loader and chunker")
         self.loader = DocumentLoader(data_dir=self.data_dir, uploads_dir=self.uploads_dir)
         self.chunker = DocumentChunker(
             chunk_size=int(os.getenv("CHUNK_SIZE", 800)),
             chunk_overlap=int(os.getenv("CHUNK_OVERLAP", 150))
         )
+        logger.info("ChromaIndexer: initializing persistent ChromaDB client/vector store")
         self._init_vectorstore()
+        logger.info("ChromaIndexer ready")
 
     def _init_vectorstore(self):
         """Initializes the persistent Chroma vector store."""
+        started = time.perf_counter()
         self.chroma_client = chromadb.PersistentClient(path=self.persist_dir)
         self.vectorstore = Chroma(
             client=self.chroma_client,
             collection_name=self.collection_name,
             embedding_function=self.embeddings,
         )
+        logger.info("ChromaDB vector store ready in %.2fs", time.perf_counter() - started)
 
     def rebuild_index(self) -> Dict[str, Any]:
         """Re-indexes all documents from data/ and data/raw_uploads/ from scratch."""

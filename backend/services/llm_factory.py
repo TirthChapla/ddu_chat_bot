@@ -4,15 +4,17 @@ Provides multi-provider LLM support: Google Gemini (Free Tier), Ollama, or an in
 """
 
 import os
-import re
 import logging
+import time
 from pathlib import Path
-from typing import Any, List, Optional
 from dotenv import load_dotenv
-from langchain_core.language_models.llms import LLM
-from langchain_core.callbacks.manager import CallbackManagerForLLMRun
+from ..config import settings
 
 logger = logging.getLogger(__name__)
+
+
+class GeminiRequestError(RuntimeError):
+    """A Gemini client or generation failure that should reach the API layer."""
 
 
 def reload_env():
@@ -21,106 +23,43 @@ def reload_env():
     load_dotenv(dotenv_path=env_path, override=True)
 
 
-class IntelligentExtractiveLLM(LLM):
-    """
-    Synthesizes direct, intelligent answers from retrieved context
-    when no external cloud API key is configured.
-    """
-    @property
-    def _llm_type(self) -> str:
-        return "intelligent_extractive"
-
-    def _call(
-        self,
-        prompt: str,
-        stop: Optional[List[str]] = None,
-        run_manager: Optional[CallbackManagerForLLMRun] = None,
-        **kwargs: Any,
-    ) -> str:
-        context_match = re.search(r"Context:\s*(.*?)\s*User Question:", prompt, re.DOTALL | re.IGNORECASE)
-        question_match = re.search(r"User Question:\s*(.*?)(?:\n\nHelpful|\Z)", prompt, re.DOTALL | re.IGNORECASE)
-
-        context = context_match.group(1).strip() if context_match else prompt
-        question = question_match.group(1).strip() if question_match else ""
-
-        if not context or "No relevant information found" in context:
-            return (
-                "I could not find specific verified records regarding this query in the official DDU knowledge base. "
-                "Please check the official university portal at https://www.ddu.ac.in or contact the DDU office."
-            )
-
-        # Extract words from question for relevance scoring
-        q_words = set(re.findall(r'\w+', question.lower())) - {
-            "what", "is", "the", "are", "how", "can", "to", "in", "for", "at", "ddu", "of", "and", "a", "an", "do", "does"
-        }
-
-        # Split context into semantic lines / bullet points
-        raw_lines = [line.strip() for line in context.split("\n") if line.strip()]
-        scored_lines = []
-
-        for line in raw_lines:
-            if line.startswith("[Source:") or line.startswith("---") or line.startswith("==="):
-                continue
-            line_clean = line.lower()
-            overlap = sum(1 for w in q_words if w in line_clean)
-            if overlap > 0 or line.startswith("-") or line.startswith("•") or line.startswith("##"):
-                scored_lines.append((overlap, line))
-
-        # Sort by overlap
-        scored_lines.sort(key=lambda x: x[0], reverse=True)
-        top_lines = [line for score, line in scored_lines if score > 0]
-
-        if top_lines:
-            cleaned_bullets = [re.sub(r'^[-•#*]+\s*', '', l) for l in top_lines[:5]]
-            bullet_points = "\n".join([f"• {b}" for b in cleaned_bullets])
-            return (
-                f"**Summary of DDU Academic Guidelines & Records:**\n\n"
-                f"{bullet_points}\n\n"
-                f"*(Add your free `GEMINI_API_KEY` in `.env` for full natural language AI answers)*"
-            )
-
-        # Fallback to top clean paragraphs
-        paragraphs = [p.strip() for p in context.split("\n\n") if not p.startswith("[Source:") and len(p.strip()) > 30]
-        summary = "\n\n".join(paragraphs[:2]) if paragraphs else context[:600]
-        return summary
-
-
 def get_llm():
-    """Dynamically returns the best available LLM based on current .env."""
+    """Create a configured Gemini client without making a network request."""
     reload_env()
-    provider = os.getenv("LLM_PROVIDER", "gemini").lower()
     gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+    model_name = os.getenv("GEMINI_MODEL", settings.GEMINI_MODEL).strip()
 
-    # 1. Google Gemini (Preferred & Free)
-    if gemini_key:
-        try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
-            logger.info(f"Initializing Google Gemini ({model_name})...")
-            return ChatGoogleGenerativeAI(
-                model=model_name,
-                google_api_key=gemini_key,
-                temperature=0.2,
-                top_p=0.85,
-            )
-        except Exception as e:
-            logger.warning(f"Error initializing ChatGoogleGenerativeAI: {e}")
+    if not gemini_key:
+        logger.error("Gemini configuration invalid: GEMINI_API_KEY is missing")
+        raise ValueError("GEMINI_API_KEY is not set in the environment.")
 
-    # 2. Ollama
-    if provider == "ollama":
-        try:
-            from langchain_community.llms import Ollama
-            ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-            ollama_model = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
-            logger.info(f"Initializing Ollama ({ollama_model})...")
-            return Ollama(
-                base_url=ollama_url,
-                model=ollama_model,
-                temperature=0.2,
-            )
-        except Exception as e:
-            logger.warning(f"Ollama not available: {e}")
+    logger.info(
+        "Gemini configuration loaded: key_present=%s key_prefix=%s model=%s timeout=%ss",
+        True,
+        gemini_key[:10],
+        model_name,
+        settings.GEMINI_TIMEOUT_SECONDS,
+    )
+    started = time.perf_counter()
+    logger.info("START Gemini client initialization; no API request has been made yet")
+    
+    # Configure environment to use REST transport instead of gRPC which can be slow on Windows
+    os.environ["GOOGLE_API_USE_REST"] = "1"
 
-    # 3. Intelligent Extractive Fallback
-    logger.info("Using Intelligent Extractive Context synthesis engine")
-    return IntelligentExtractiveLLM()
+    try:
+        from langchain_google_genai import ChatGoogleGenerativeAI
+
+        client = ChatGoogleGenerativeAI(
+            model=model_name,
+            google_api_key=gemini_key,
+            temperature=0.2,
+            top_p=0.85,
+            timeout=settings.GEMINI_TIMEOUT_SECONDS,
+            max_retries=0,
+        )
+    except Exception as exc:
+        logger.exception("Gemini client initialization failed for model=%s", model_name)
+        raise GeminiRequestError(f"Could not initialize Gemini model {model_name!r}.") from exc
+
+    logger.info("DONE Gemini client initialization in %.2fs", time.perf_counter() - started)
+    return client
