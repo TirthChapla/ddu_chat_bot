@@ -16,7 +16,7 @@ from ..config import settings
 from ..models.schemas import ChatRequest, ChatResponse, SourceCitation, QueryLog
 from .classifier_service import QueryClassifierService
 from .suggestion_service import SuggestionService
-from .llm_factory import GeminiRequestError, get_llm
+from .llm_factory import LLMRequestError, get_llm
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +127,8 @@ class RAGService:
         # 4. LLM Generation
         llm_started = time.perf_counter()
         logger.info(
-            "GEMINI CALL PREPARE category=%s sources=%d prompt_chars=%d",
+            "LLM CALL PREPARE provider=%s category=%s sources=%d prompt_chars=%d",
+            settings.LLM_PROVIDER,
             category,
             len(citations),
             len(context_str) + len(query),
@@ -135,10 +136,11 @@ class RAGService:
         try:
             active_llm = get_llm()
             formatted_prompt = self.prompt.format(context=context_str, question=query)
-            logger.info("GEMINI CALL START model client ready; invoking generate_content")
+            logger.info("LLM CALL START model client ready; invoking invoke")
             llm_response = active_llm.invoke(formatted_prompt)
             logger.info(
-                "GEMINI CALL END duration=%.2fs response_type=%s",
+                "LLM CALL END provider=%s duration=%.2fs response_type=%s",
+                settings.LLM_PROVIDER,
                 time.perf_counter() - llm_started,
                 type(llm_response).__name__,
             )
@@ -154,12 +156,13 @@ class RAGService:
                 answer_text = str(llm_response)
         except Exception as exc:
             logger.exception(
-                "GEMINI CALL FAILED after %.2fs",
+                "LLM CALL FAILED provider=%s after %.2fs",
+                settings.LLM_PROVIDER,
                 time.perf_counter() - llm_started,
             )
-            raise GeminiRequestError(
-                "Gemini did not return a response. Check the API key, model name, quota, "
-                "network connectivity, and timeout logs."
+            raise LLMRequestError(
+                f"{settings.LLM_PROVIDER.title()} did not return a response. Check the provider "
+                "configuration, model name, connectivity, and timeout logs."
             ) from exc
 
         # 5. Dynamic Follow-Up Suggestions

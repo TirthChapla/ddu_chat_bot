@@ -8,7 +8,7 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from ..models.schemas import ChatRequest, ChatResponse
-from ..services.llm_factory import GeminiRequestError
+from ..services.llm_factory import LLMRequestError
 
 logger = logging.getLogger(__name__)
 
@@ -39,10 +39,10 @@ async def handle_chat(
         logger.exception("Chat request exceeded the 60-second API timeout")
         raise HTTPException(
             status_code=504,
-            detail="Gemini took too long to respond. Please try again later.",
+            detail="The configured language model took too long to respond. Please try again later.",
         ) from exc
-    except GeminiRequestError as exc:
-        logger.exception("Gemini request failed")
+    except LLMRequestError as exc:
+        logger.exception("Configured LLM request failed")
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     except Exception as e:
         logger.exception("Unexpected chat request failure")

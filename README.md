@@ -174,9 +174,26 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# (Optional) Add your Google Gemini API key to .env for Gemini 1.5 Flash
+# Choose the provider with LOCAL_MODEL in .env:
+# LOCAL_MODEL=false
 # GEMINI_API_KEY=your_key_here
+# GEMINI_MODEL=gemini-3.5-flash-lite
+#
+# Or use a local Ollama model:
+# LOCAL_MODEL=true
+# OLLAMA_BASE_URL=http://localhost:11434
+# OLLAMA_MODEL=qwen2.5:7b
 ```
+
+When using Ollama, install Ollama separately, start the Ollama service, and
+download the configured model before starting the backend:
+
+```bash
+ollama pull qwen2.5:7b
+```
+
+The backend logs the selected provider at startup and does not silently
+substitute one provider for another.
 
 ### 3. Build & Run Frontend
 ```bash
