@@ -27,12 +27,17 @@ def reload_env():
 def get_llm():
     """Create a configured LLM client without making a generation request.
 
-    Set ``LOCAL_MODEL=true`` to use a local Ollama server. Any other value
-    selects Google's Gemini API.
+    ``LLM_PROVIDER`` is the authoritative setting when present. For backward
+    compatibility, ``LOCAL_MODEL=true`` selects Ollama when no provider is
+    configured.
     """
     reload_env()
-    local_model = os.getenv("LOCAL_MODEL", "false").strip().lower() == "true"
-    provider = "ollama" if local_model else "gemini"
+    configured_provider = os.getenv("LLM_PROVIDER", "").strip().lower()
+    if configured_provider:
+        provider = configured_provider
+    else:
+        local_model = os.getenv("LOCAL_MODEL", "false").strip().lower() == "true"
+        provider = "ollama" if local_model else "gemini"
     started = time.perf_counter()
 
     if provider == "gemini":
