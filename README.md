@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////# 🎓 DDU AI Assistant — End-to-End University RAG System
+# 🎓 DDU AI Assistant — End-to-End University RAG System
 
 A production-grade, resume-ready **Retrieval-Augmented Generation (RAG)** chatbot built specifically for **Dharmsinh Desai University (DDU), Nadiad**.
 
